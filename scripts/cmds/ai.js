@@ -5,14 +5,14 @@ const Prefixes = [
   'ask',
   'gpt',
   'openai',
-  '@ai', // Add your AI names here
+  '@ai',
 ];
 
 module.exports = {
   config: {
     name: 'ai',
     version: '1.0.5',
-    author: 'ArYAN', // don't change credits please
+    author: 'ArYAN',
     role: 0,
     category: 'ai',
     longDescription: {
@@ -28,30 +28,26 @@ module.exports = {
       `
     }
   },
-
   onStart: async () => {},
-
   onChat: async ({ api, event, args, message, usersData }) => {
     const prefix = Prefixes.find(p => event.body.toLowerCase().startsWith(p));
     if (!prefix) return;
 
     const question = event.body.slice(prefix.length).trim();
     if (!question) {
-      return message.reply("❌ It looks like you didn't provide a question. Please include a question after the command so I can assist you.");
+      return message.reply("❗ It looks like you didn't provide a question. Please include a question after the command so I can assist you.");
     }
 
     const uid = event.senderID;
-    const user = await usersData.get(uid);
-    const name = user ? user.name : "a user";
-    const currentDateTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour12: true });
 
     api.setMessageReaction("⏳", event.messageID, () => {}, true);
 
     const startTime = Date.now();
 
     try {
-      const apiUrl = `https://king-aryanapis.onrender.com/gts/smile?uid=${uid}&question=${encodeURIComponent(question)}`;
-      const response = await axios.get(apiUrl);
+      const response = await axios.get('https://king-aryanapis.onrender.com/gts/smile', {
+        params: { uid, question }
+      });
 
       if (response.status !== 200 || !response.data) {
         throw new Error('Invalid or missing response from API');
@@ -59,10 +55,13 @@ module.exports = {
 
       const answer = response.data.response;
       const endTime = Date.now();
-      const processTimeMs = endTime - startTime;
-      const processTimeSec = (processTimeMs / 1000).toFixed(2);
+      const processTimeSec = ((endTime - startTime) / 1000).toFixed(2);
 
-      const replyMessage = await message.reply(`𝗠𝗶𝗰𝗮🎀\n━━━━━━━━━━━━━━━━\n➤𝘼𝙘𝙚 𝘼𝙙𝙫𝙤𝙘𝙖𝙩𝙚𝙨 (𝘼𝘼𝙂)♦\n\n${answer}\n━━━━━━━━━━━━━━━━\n🗣 Asked by: ${name}\n⏰ Respond Time: ${currentDateTime}\n⏱ Process Time: ${processTimeSec} seconds`);
+      const user = await usersData.get(event.senderID);
+      const name = user ? user.name : "a user";
+      const currentDateTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour12: true });
+
+      const replyMessage = await message.reply(`📝 **Question**: ${question}\n━━━━━━━━━━━━━━━━\n\n✅ **Answer**: ${answer}\n\n━━━━━━━━━━━━━━━━\n🗣 **Asked by**: ${name}\n⏰ **Response Time**: ${currentDateTime}\n⏲ **Processing Time**: ${processTimeSec} seconds`);
 
       global.GoatBot.onReply.set(replyMessage.messageID, {
         commandName: module.exports.config.name,
@@ -73,21 +72,20 @@ module.exports = {
       api.setMessageReaction("✅", event.messageID, () => {}, true);
 
     } catch (error) {
-      console.error(`❌ | Failed to get AI response: ${error.message}`);
-      const errorMessage = `𝗠𝗶𝗰𝗮🎀\n━━━━━━━━━━━━━━━━\n⛔ 𝗡𝗼𝘁 𝗙𝗼𝘂𝗻𝗱\n\nThe AI you're trying to access doesn't exist or is unavailable, please try again later!\n━━━━━━━━━━━━━━━━\n🗣 Asked by: ${name}\n⏰ Respond Time: ${currentDateTime}`;
-      message.reply(errorMessage);
+      console.error(`Error fetching response: ${error.message}, Status Code: ${error.response ? error.response.status : 'N/A'}`);
+      message.reply(`⚠️ An error occurred while processing your request. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
 
       api.setMessageReaction("❌", event.messageID, () => {}, true);
     }
   },
 
-  onReply: async ({ api, event, Reply, message }) => {
+  onReply: async ({ api, event, Reply, message, usersData }) => {
     const { author } = Reply;
     const userReply = event.body.trim();
     const uid = event.senderID;
 
     if (author !== uid) {
-      return message.reply("⛔ You are not authorized to reply to this message.");
+      return message.reply("⚠️ You are not authorized to reply to this message.");
     }
 
     if (global.GoatBot.onReply.has(event.messageID)) {
@@ -107,11 +105,13 @@ module.exports = {
         }
 
         message.reply("✅ The conversation history has been successfully cleared.");
+
         api.setMessageReaction("✅", event.messageID, () => {}, true);
 
       } catch (error) {
-        console.error(`❌ | Error resetting conversation: ${error.message}`);
-        message.reply(`⛔ An error occurred while clearing the conversation history. Error: ${error.message}. Please try again later.`);
+        console.error(`Error resetting conversation: ${error.message}, Status Code: ${error.response ? error.response.status : 'N/A'}`);
+        message.reply(`⚠️ An error occurred while clearing the conversation history. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
+
         api.setMessageReaction("❌", event.messageID, () => {}, true);
       }
       return;
@@ -120,8 +120,9 @@ module.exports = {
     const startTime = Date.now();
 
     try {
-      const apiUrl = `https://king-aryanapis.onrender.com/gts/smile?uid=${uid}&question=${encodeURIComponent(userReply)}`;
-      const response = await axios.get(apiUrl);
+      const response = await axios.get('https://king-aryanapis.onrender.com/gts/smile', {
+        params: { uid, question: userReply }
+      });
 
       if (response.status !== 200 || !response.data) {
         throw new Error('Invalid or missing response from API');
@@ -129,10 +130,13 @@ module.exports = {
 
       const followUpResponse = response.data.response;
       const endTime = Date.now();
-      const processTimeMs = endTime - startTime;
-      const processTimeSec = (processTimeMs / 1000).toFixed(2);
+      const processTimeSec = ((endTime - startTime) / 1000).toFixed(2);
 
-      const followUpMessage = await message.reply(`𝗠𝗶𝗰𝗮🎀\n━━━━━━━━━━━━━━━━\n➤𝘼𝙘𝙚 𝘼𝙙𝙫𝙤𝙘𝙖𝙩𝙚𝙨 (𝘼𝘼𝙂)♦\n\n${followUpResponse}\n━━━━━━━━━━━━━━━━\n🗣 Asked by: ${name}\n⏰ Respond Time: ${currentDateTime}\n⏱ Process Time: ${processTimeSec} seconds`);
+      const user = await usersData.get(event.senderID);
+      const name = user ? user.name : "a user";
+      const currentDateTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour12: true });
+
+      const followUpMessage = await message.reply(`📝 **Question**: ${userReply}\n━━━━━━━━━━━━━━━━\n\n✅ **Answer**: ${followUpResponse}\n\n━━━━━━━━━━━━━━━━\n🗣 **Asked by**: ${name}\n⏰ **Response Time**: ${currentDateTime}\n⏲ **Processing Time**: ${processTimeSec} seconds`);
 
       global.GoatBot.onReply.set(followUpMessage.messageID, {
         commandName: module.exports.config.name,
@@ -143,8 +147,9 @@ module.exports = {
       api.setMessageReaction("✅", event.messageID, () => {}, true);
 
     } catch (error) {
-      console.error(`❌ | Error fetching follow-up response: ${error.message}`);
-      message.reply(`⛔ An error occurred while processing your reply. Error: ${error.message}. Please try again later.`);
+      console.error(`Error fetching follow-up response: ${error.message}, Status Code: ${error.response ? error.response.status : 'N/A'}`);
+      message.reply(`⚠️ An error occurred while processing your reply. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
+
       api.setMessageReaction("❌", event.messageID, () => {}, true);
     }
   }
