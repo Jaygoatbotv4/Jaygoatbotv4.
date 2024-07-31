@@ -15,7 +15,7 @@ async function a(api, event, args, message, usersData) {
       const name = user ? user.name : "a user";
       const currentDateTime = new Date().toLocaleString("en-US", { timeZone: "Asia/Manila", hour12: true });
 
-      const formattedResponse = `𝗛𝗼𝗿𝗻𝘆 𝗔𝗜\n━━━━━━━━━━━━━━━━\n➤ 𝑯𝒐𝒓𝒏𝒚 𝑨𝒅𝒗𝒊𝒄𝒆𝒓 (𝑯𝑨𝑮)♦\n\n${response.answer}\n━━━━━━━━━━━━━━━━\n🗣 Asked by: ${name}\n⏰ Respond Time: ${currentDateTime}`;
+      const formattedResponse = `𝗛𝗼𝗿𝗻𝘆 𝗠𝗶𝗰𝗮🎀\n━━━━━━━━━━━━━━━━\n➤ 𝓗𝓸𝓻𝓷𝔂 𝓪𝓲,𝓯𝓸𝓻 𝓼𝓾𝓼 𝓴𝓲𝓭𝓼🎀💦\n\n${response.answer}\n━━━━━━━━━━━━━━━━\n🗣 Asked by: ${name}\n⏰ Respond Time: ${currentDateTime}`;
 
       message.reply(formattedResponse, (err, sentMessage) => {
         if (!err) {
