@@ -1,113 +1,144 @@
-const axios = require("axios");
-const fs = require('fs-extra');
+const fs = require('fs');
+const axios = require('axios');
 const path = require('path');
-const { getStreamFromURL, shortenURL, randomString } = global.utils;
 
-const API_KEYS = [
-    'b38444b5b7mshc6ce6bcd5c9e446p154fa1jsn7bbcfb025b3b',
-    '719775e815msh65471c929a0203bp10fe44jsndcb70c04bc42',
-    '0c162a35d2msh1999dc27302c23bp15ac06jsnb872ad3d865a',
-    'a2743acb5amsh6ac9c5c61aada87p156ebcjsnd25f1ef87037',
-];
-
-async function video(api, event, args, message) {
-    api.setMessageReaction("🕢", event.messageID, (err) => {}, true);
-    try {
-        let title = '';
-        let shortUrl = '';
-        let videoId = '';
-
-        const extractShortUrl = async () => {
-            const attachment = event.messageReply.attachments[0];
-            if (attachment.type === "video" || attachment.type === "audio") {
-                return attachment.url;
-            } else {
-                throw new Error("Invalid attachment type.");
-            }
-        };
-
-        const getRandomApiKey = () => {
-            const randomIndex = Math.floor(Math.random() * API_KEYS.length);
-            return API_KEYS[randomIndex];
-        };
-
-        if (event.messageReply && event.messageReply.attachments && event.messageReply.attachments.length > 0) {
-            shortUrl = await extractShortUrl();
-            const musicRecognitionResponse = await axios.get(`https://audio-recon-ahcw.onrender.com/kshitiz?url=${encodeURIComponent(shortUrl)}`);
-            title = musicRecognitionResponse.data.title;
-            const searchResponse = await axios.get(`https://youtube-kshitiz-gamma.vercel.app/yt?search=${encodeURIComponent(title)}`);
-            if (searchResponse.data.length > 0) {
-                videoId = searchResponse.data[0].videoId;
-            }
-
-            shortUrl = await shortenURL(shortUrl);
-        } else if (args.length === 0) {
-            message.reply("Please provide a video name or reply to a video or audio attachment.");
-            return;
-        } else {
-            title = args.join(" ");
-            const searchResponse = await axios.get(`https://youtube-kshitiz-gamma.vercel.app/yt?search=${encodeURIComponent(title)}`);
-            if (searchResponse.data.length > 0) {
-                videoId = searchResponse.data[0].videoId;
-            }
-
-            const videoUrlResponse = await axios.get(`https://yt-kshitiz.vercel.app/download?id=${encodeURIComponent(videoId)}&apikey=${getRandomApiKey()}`);
-            if (videoUrlResponse.data.length > 0) {
-                shortUrl = await shortenURL(videoUrlResponse.data[0]);
-            }
-        }
-
-        if (!videoId) {
-            message.reply("No video found for the given query.");
-            return;
-        }
-
-        const downloadResponse = await axios.get(`https://yt-kshitiz.vercel.app/download?id=${encodeURIComponent(videoId)}&apikey=${getRandomApiKey()}`);
-        const videoUrl = downloadResponse.data[0];
-
-        if (!videoUrl) {
-            message.reply("Failed to retrieve download link for the video.");
-            return;
-        }
-
-        const writer = fs.createWriteStream(path.join(__dirname, "cache", `${videoId}.mp3`));
-        const response = await axios({
-            url: videoUrl,
-            method: 'GET',
-            responseType: 'stream'
-        });
-
-        response.data.pipe(writer);
-
-        writer.on('finish', () => {
-            const videoStream = fs.createReadStream(path.join(__dirname, "cache", `${videoId}.mp3`));
-            message.reply({ body: `📹 Playing: ${title}`, attachment: videoStream });
-            api.setMessageReaction("✅", event.messageID, () => {}, true);
-        });
-
-        writer.on('error', (error) => {
-            console.error("Error:", error);
-            message.reply("Error downloading the video.");
-        });
-    } catch (error) {
-        console.error("Error:", error);
-        message.reply("An error occurred.");
-    }
+const cacheDir = path.join(__dirname, 'cache');
+if (!fs.existsSync(cacheDir)) {
+    fs.mkdirSync(cacheDir);
 }
 
 module.exports = {
     config: {
-        name: "sing", 
-        version: "1.0",
-        author: "Vex_Kshitiz",
-        countDown: 10,
-        role: 0,
-        shortDescription: "play audio from youtube",
-        longDescription: "play audio from youtube support audio recognition.",
+        name: "sing",
+        version: "4.6",
+        author: "ArYAN",
+        shortDescription: { 
+            en: 'Search and download music' 
+        },
+        longDescription: { 
+            en: "Search for music and download the first result or select a specific track." 
+        },
         category: "music",
-        guide: "{p} audio videoname / reply to audio or video" 
+        guide: { 
+            en: '{p}s <song name> - Search for a song\n' +
+                'Example:\n' +
+                '  {p}s Blinding Lights\n' +
+                'After receiving the search results, reply with the song ID to download the track.\n' +
+                'Reply with "1 to 12" to download the first track in the list.'
+        }
     },
-    onStart: function ({ api, event, args, message }) {
-        return video(api, event, args, message);
+
+    onStart: async function ({ api, event, args }) {
+        if (args.length === 0) {
+            return api.sendMessage("Please provide the name of the song you want to search.", event.threadID, event.messageID);
+        }
+
+        const searchQuery = encodeURIComponent(args.join(" "));
+        const apiUrl = `https://c-v1.onrender.com/yt/s?query=${searchQuery}`;
+
+        try {
+            api.sendMessage("🎵 | Searching for music. Please wait...", event.threadID, event.messageID);
+            const response = await axios.get(apiUrl);
+            const tracks = response.data;
+
+            if (tracks.length > 0) {
+                const topTracks = tracks.slice(0, 12);
+                let message = "🎶 𝗬𝗼𝘂𝗧𝘂𝗯𝗲\n━━━━━━━━━━━━━\n\n🎶 | Here are the top 12 tracks\n\n";
+
+                for (const track of topTracks) {
+                    message += `🆔 𝗜𝗗: ${topTracks.indexOf(track) + 1}\n`;
+                    message += `📝 𝗧𝗶𝘁𝗹𝗲: ${track.title}\n`;
+                    message += `📅 𝗥𝗲𝗹𝗲𝗮𝘀𝗲 𝗗𝗮𝘁𝗲: ${new Date(track.publishDate).toLocaleDateString()}\n`;
+                    message += `👤 𝗖𝗵𝗮𝗻𝗻𝗲𝗹: ${track.channelTitle}\n`;
+                    message += `👁 𝗩𝗶𝗲𝘄𝘀: ${track.viewCount}\n`;
+                    message += `👍 𝗟𝗶𝗸𝗲𝘀: ${track.likeCount}\n`;
+                    message += "━━━━━━━━━━━━━\n";
+                }
+
+                message += "\nReply with the number of the song ID you want to download.";
+                api.sendMessage({
+                    body: message
+                }, event.threadID, (err, info) => {
+                    if (err) {
+                        console.error('Error sending message:', err);
+                        return api.sendMessage("🚧 | An error occurred while processing your request. Please try again later.", event.threadID);
+                    }
+                    global.GoatBot.onReply.set(info.messageID, { commandName: this.config.name, messageID: info.messageID, author: event.senderID, tracks: topTracks });
+                });
+            } else {
+                api.sendMessage("❓ | Sorry, couldn't find the requested music.", event.threadID);
+            }
+        } catch (error) {
+            console.error('Error during search:', error.message);
+            api.sendMessage("🚧 | An error occurred while processing your request. Please try again later.", event.threadID);
+        }
+    },
+
+    onReply: async function ({ api, event, Reply, args }) {
+        const reply = parseInt(args[0]);
+        const { author, tracks } = Reply;
+
+        if (event.senderID !== author) return;
+
+        try {
+            if (isNaN(reply) || reply < 1 || reply > tracks.length) {
+                throw new Error("Invalid selection. Please reply with a number corresponding to the track.");
+            }
+
+            const selectedTrack = tracks[reply - 1];
+            const videoUrl = selectedTrack.videoUrl;
+            const downloadApiUrl = `https://c-v1.onrender.com/yt/d?url=${encodeURIComponent(videoUrl)}`;
+
+            api.sendMessage("⏳ | Downloading your song, please wait...", event.threadID, async (err, info) => {
+                if (err) {
+                    console.error('Error sending download message:', err);
+                    return api.sendMessage("🚧 | An error occurred while processing your request. Please try again later.", event.threadID);
+                }
+
+                try {
+                    const downloadLinkResponse = await axios.get(downloadApiUrl);
+                    const downloadLink = downloadLinkResponse.data.result.audio;
+
+                    if (!downloadLink) {
+                        throw new Error("Failed to get the download link.");
+                    }
+
+                    const filePath = path.join(cacheDir, `${Date.now()}.mp3`);
+                    const writer = fs.createWriteStream(filePath);
+
+                    const response = await axios({
+                        url: downloadLink,
+                        method: 'GET',
+                        responseType: 'stream'
+                    });
+
+                    response.data.pipe(writer);
+
+                    writer.on('finish', () => {
+                        api.setMessageReaction("✅", info.messageID);
+
+                        api.sendMessage({
+                            body: `🎶 𝗬𝗼𝘂𝗧𝘂𝗯𝗲\n\n━━━━━━━━━━━━━\nHere's your music ${selectedTrack.title}.\n\n📒 𝗧𝗶𝘁𝗹𝗲: ${selectedTrack.title}\n📅 𝗣𝘂𝗯𝗹𝗶𝘀𝗵 𝗗𝗮𝘁𝗲: ${new Date(selectedTrack.publishDate).toLocaleDateString()}\n👀 𝗩𝗶𝗲𝘄𝘀: ${selectedTrack.viewCount}\n👍 𝗟𝗶𝗸𝗲𝘀: ${selectedTrack.likeCount}\n\nEnjoy listening!...🥰`,
+                            attachment: fs.createReadStream(filePath),
+                        }, event.threadID, () => fs.unlinkSync(filePath));
+                    });
+
+                    writer.on('error', (err) => {
+                        console.error('Error saving the file:', err);
+                        api.sendMessage("🚧 | An error occurred while processing your request.", event.threadID);
+                    });
+                } catch (error) {
+                    console.error('Error during download:', error.message);
+                    api.sendMessage(`🚧 | An error occurred while processing your request: ${error.message}`, event.threadID);
+                }
+            });
+
+        } catch (error) {
+            console.error('Error handling reply:', error.message);
+            api.sendMessage(`🚧 | An error occurred while processing your request: ${error.message}`, event.threadID);
+        }
+
+        api.unsendMessage(Reply.messageID);
+        global.GoatBot.onReply.delete(Reply.messageID);
     }
 };
