@@ -124,7 +124,7 @@ module.exports = {
 
 
 
-      const replyMessage = await message.reply(`𝗠𝗶𝗰𝗮 𝗔𝗶🎀\n━━━━━━━━━━━━━━━━\n\n${answer}\n\n━━━━━━━━━━━━━━━━\n🗣 **Asked by**: ${name}\n⏰ **Response Time**: ${currentDateTime}\n⏲ **Processing Time**: ${processTimeSec} seconds`);
+      const replyMessage = await message.reply(`𝗠𝗶𝗰𝗮 𝗔𝗶🎀\n━━━━━━━━━━━━━━━━\n\n${answer}\n\n━━━━━━━━━━━━━━━━\n🗣Asked by:${name}\n⏰Response Time:${currentDateTime}\n⏲Processing Time:${processTimeSec} seconds`);
 
 
 
@@ -274,7 +274,7 @@ module.exports = {
 
 
 
-      const followUpMessage = await message.reply(`𝗠𝗶𝗰𝗮 𝗔𝗶🎀\n━━━━━━━━━━━━━━━━\n\n${followUpResponse}\n\n━━━━━━━━━━━━━━━━\n🗣 **Asked by**: ${name}\n⏰ **Response Time**: ${currentDateTime}\n⏲ **Processing Time**: ${processTimeSec} seconds`);
+      const followUpMessage = await message.reply(`𝗠𝗶𝗰𝗮 𝗔𝗶🎀\n━━━━━━━━━━━━━━━━\n\n${followUpResponse}\n\n━━━━━━━━━━━━━━━━\n🗣Asked by:${name}\n⏰Response Time:${currentDateTime}\n⏲Processing Time:${processTimeSec} seconds`);
 
 
 
