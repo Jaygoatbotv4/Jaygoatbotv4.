@@ -1,66 +1,53 @@
-const { GoatWrapper } = require('fca-liane-utils');
-const axios = require('axios');
 const fs = require('fs');
-const path = require('path');
+const moment = require('moment-timezone');
 
 module.exports = {
 	config: {
-		name: "owner",
-		author: "Tokodori",
+		name: "info",
+		version: "1.0",
+		author: "cliff",
+		countDown: 20,
 		role: 0,
-		shortDescription: " ",
-		longDescription: "",
-		category: "admin",
-		guide: "{pn}"
+		shortDescription: { vi: "", en: "" },
+		longDescription: { vi: "", en: "" },
+		category: "owner",
+		guide: { en: "" },
+		envConfig: {}
 	},
+	onStart: async function ({ message }) {
+		const botName = "MICA AI🎀";
+		const authorName = "𝗝𝗮𝘆";
+		const authorFB = "https://www.facebook.com/jayboy.pillonar?mibextid=ZbWKwL";
+		const botPrefix = "/";
+		const bio = "𝗘𝘆𝘆𝘆𝘆𝘆𝘆𝘆𝘆🤙🏻";
+		const now = moment().tz('Asia/Jakarta');
+		const date = now.format('M/D/YYYY');
+		const time = now.format('HH:mm:ss');
+		const uptime = process.uptime();
+		const seconds = Math.floor(uptime % 60);
+		const minutes = Math.floor((uptime / 60) % 60);
+		const hours = Math.floor((uptime / (60 * 60)) % 24);
+		const uptimeString = `${hours} hours ${minutes} minutes ${seconds} seconds`;
 
-	onStart: async function ({ api, event }) {
-		try {
-			const ownerInfo = {
-				name: '𝗝𝗮𝘆',
-				gender: '𝗠𝗮𝗹𝗲',
-				hobby: '𝗖𝗼𝗼𝗸𝗶𝗻𝗴 𝗮𝗻𝗱 𝗽𝗹𝗮𝘆𝗶𝗻𝗴 𝗖𝗵𝗲𝘀𝘀,𝗕𝗮𝘀𝗸𝗲𝘁𝗯𝗮𝗹𝗹,𝗧𝗮𝗸𝗿𝗮𝘄,𝗥𝗼𝗯𝗹𝗼𝘅.',
-				Fb: '𝗝𝗮𝘆 𝗣𝗶𝗹𝗹𝗼𝗻𝗮𝗿',
-				Relationship: '𝗦𝗶𝗻𝗴𝗹𝗲',
-				bio: '𝗶𝗱𝗸 𝗜𝗺 𝗷𝘂𝘀 𝗹𝗲𝗮𝗿𝗻𝗶𝗻 𝗯𝗲𝗶𝗻 𝗮 𝗯𝗼𝘁 𝗱𝗲𝘃.'
-			};
+		message.reply({
+			body: `《《 𝗢𝗪𝗡𝗘𝗥 𝗜𝗡𝗙𝗢 》》
 
-			const bold = 'https://i.imgur.com/wqTUK0c.mp4';
-			const tmpFolderPath = path.join(__dirname, 'tmp');
+⁂ Bot Name: ${botName}
+✧ Main admin: ${authorName}
+♛ Bot Admin Link: ${authorFB}
+❂ Bot Prefix: ${botPrefix}
+✫ Bio: ${bio}
+➟ UPTIME ${uptimeString}
+✬ Today is: 『${date}』 【${time}】
 
-			if (!fs.existsSync(tmpFolderPath)) {
-				fs.mkdirSync(tmpFolderPath);
-			}
-
-			const videoResponse = await axios.get(bold, { responseType: 'arraybuffer' });
-			const videoPath = path.join(tmpFolderPath, 'owner_video.mp4');
-
-			fs.writeFileSync(videoPath, Buffer.from(videoResponse.data, 'binary'));
-
-			const response = `
-◈ 𝖮𝖶𝖭𝖤𝖱 𝖨𝖭𝖥𝖮𝖱𝖬𝖠𝖳𝖨𝖮𝖭:\n
-Name: ${ownerInfo.name}
-Gender: ${ownerInfo.gender}
-Relationship: ${ownerInfo.Relationship}
-Hobby: ${ownerInfo.hobby}
-Fb: ${ownerInfo.Fb}
-Bio: ${ownerInfo.bio}
-			`;
-
-			await api.sendMessage({
-				body: response,
-				attachment: fs.createReadStream(videoPath)
-			}, event.threadID, event.messageID);
-
-			fs.unlinkSync(videoPath);
-
-			api.setMessageReaction('🌊', event.messageID, (err) => {}, true);
-		} catch (error) {
-			console.error('Error in ownerinfo command:', error);
-			return api.sendMessage('An error occurred while processing the command.', event.threadID);
+➳ Bot is running ${uptimeString}.
+✫ Thanks for using my bot`,
+			attachment: await global.utils.getStreamFromURL(link)
+		});
+	},
+	onChat: async function ({ event, message, getLang }) {
+		if (event.body && event.body.toLowerCase() === "info") {
+			this.onStart({ message });
 		}
 	}
 };
-
-const wrapper = new GoatWrapper(module.exports);
-wrapper.applyNoPrefix({ allowPrefix: true });
