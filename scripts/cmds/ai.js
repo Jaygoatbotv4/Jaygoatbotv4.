@@ -5,14 +5,14 @@ const Prefixes = [
   'ask',
   'gpt',
   'openai',
-  '@ai',// put here your AI names 
+  '@ai', // put here your AI names 
 ];
 
 module.exports = {
   config: {
     name: 'ai',
     version: '1.0.5',
-    author: 'ArYAN', // don't change credits please ðŸ™ðŸ™‚
+    author: 'ArYAN', // don't change credits please
     role: 0,
     category: 'ai',
     longDescription: {
@@ -28,19 +28,20 @@ module.exports = {
       `
     }
   },
+
   onStart: async () => {},
+
   onChat: async ({ api, event, args, message }) => {
     const prefix = Prefixes.find(p => event.body.toLowerCase().startsWith(p));
     if (!prefix) return;
 
     const question = event.body.slice(prefix.length).trim();
     if (!question) {
-      return message.reply("â“ It looks like you didn't provide a question. Please include a question after the command so I can assist you.");
+      return message.reply("🔔 It looks like you didn't provide a question. Please include a question after the command so I can assist you.");
     }
 
     const uid = event.senderID;
-
-    api.setMessageReaction("â°", event.messageID, () => {}, true);
+    api.setMessageReaction("👍", event.messageID, () => {}, true);
 
     const startTime = Date.now();
 
@@ -58,7 +59,9 @@ module.exports = {
       const processTimeMs = endTime - startTime;
       const processTimeSec = (processTimeMs / 1000).toFixed(2);
 
-      const replyMessage = await message.reply(`ðŸ“’ ð—¤ð˜‚ð—²ð˜€ð˜ð—¶ð—¼ð—»: ${question}\nâ”â”â”â”â”â”â”â”â”â”â”â”â”\n\nâœ… ð—”ð—»ð˜€ð˜„ð—²ð—¿: ${answer}\n\nâ”â”â”â”â”â”â”â”â”â”â”â”â”\nð—£ð—¿ð—¼ð—°ð—²ð˜€ð˜€ ð—§ð—¶ð—ºð—²: ${processTimeSec} seconds`);
+      const formattedResponse = `𝗔𝗜 𝗥𝗲𝘀𝗽𝗼𝗻𝘀𝗲🎀\n━━━━━━━━━━━━━━━━\n➤ 𝓠𝓾𝓮𝓼𝓽𝓲𝓸𝓷: ${question}\n━━━━━━━━━━━━━━━━\n🗣 𝓐𝓷𝓼𝔀𝓮: ${answer}\n━━━━━━━━━━━━━━━━\n⏰ Respond Time: ${processTimeSec} seconds`;
+
+      const replyMessage = await message.reply(formattedResponse);
 
       global.GoatBot.onReply.set(replyMessage.messageID, {
         commandName: module.exports.config.name,
@@ -66,13 +69,13 @@ module.exports = {
         author: event.senderID
       });
 
-      api.setMessageReaction("âœ…", event.messageID, () => {}, true);
+      api.setMessageReaction("✔️", event.messageID, () => {}, true);
 
     } catch (error) {
       console.error(`Error fetching response: ${error.message}, Status Code: ${error.response ? error.response.status : 'N/A'}`);
-      message.reply(`âš ï¸ An error occurred while processing your request. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
+      message.reply(`✏️ An error occurred while processing your request. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
 
-      api.setMessageReaction("âŒ", event.messageID, () => {}, true);
+      api.setMessageReaction("❌", event.messageID, () => {}, true);
     }
   },
 
@@ -82,14 +85,14 @@ module.exports = {
     const uid = event.senderID;
 
     if (author !== uid) {
-      return message.reply("âš ï¸ You are not authorized to reply to this message.");
+      return message.reply("✏️ You are not authorized to reply to this message.");
     }
 
     if (global.GoatBot.onReply.has(event.messageID)) {
       return;
     }
 
-    api.setMessageReaction("â°", event.messageID, () => {}, true);
+    api.setMessageReaction("👍", event.messageID, () => {}, true);
 
     if (userReply.toLowerCase() === 'reset') {
       try {
@@ -101,15 +104,15 @@ module.exports = {
           throw new Error('Invalid or missing response from API');
         }
 
-        message.reply("âœ… The conversation history has been successfully cleared.");
+        message.reply("✔️ The conversation history has been successfully cleared.");
 
-        api.setMessageReaction("âœ…", event.messageID, () => {}, true);
+        api.setMessageReaction("✔️", event.messageID, () => {}, true);
 
       } catch (error) {
         console.error(`Error resetting conversation: ${error.message}, Status Code: ${error.response ? error.response.status : 'N/A'}`);
-        message.reply(`âš ï¸ An error occurred while clearing the conversation history. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
+        message.reply(`✏️ An error occurred while clearing the conversation history. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
 
-        api.setMessageReaction("âŒ", event.messageID, () => {}, true);
+        api.setMessageReaction("❌", event.messageID, () => {}, true);
       }
       return;
     }
@@ -130,7 +133,9 @@ module.exports = {
       const processTimeMs = endTime - startTime;
       const processTimeSec = (processTimeMs / 1000).toFixed(2);
 
-      const followUpMessage = await message.reply(`ðŸ“’ ð—¤ð˜‚ð—²ð˜€ð˜ð—¶ð—¼ð—»: ${userReply}\nâ”â”â”â”â”â”â”â”â”â”â”â”â”\n\nâœ… ð—”ð—»ð˜€ð˜„ð—²ð—¿: ${followUpResponse}\n\nâ”â”â”â”â”â”â”â”â”â”â”â”â”\nð—£ð—¿ð—¼ð—°ð—²ð˜€ð˜€ ð—§ð—¶ð—ºð—²: ${processTimeSec} seconds`);
+      const formattedFollowUp = `𝗔𝗜 𝗙𝗼𝗹𝗹𝗼𝘄-𝗨𝗽 𝗥𝗲𝘀𝗽𝗼𝗻𝘀𝗲🎀\n━━━━━━━━━━━━━━━━\n➤ 𝓠𝓾𝓮𝓼𝓽𝓲𝓸𝓷: ${userReply}\n━━━━━━━━━━━━━━━━\n🗣 𝓐𝓷𝓼𝔀𝓮: ${followUpResponse}\n━━━━━━━━━━━━━━━━\n⏰ Respond Time: ${processTimeSec} seconds`;
+
+      const followUpMessage = await message.reply(formattedFollowUp);
 
       global.GoatBot.onReply.set(followUpMessage.messageID, {
         commandName: module.exports.config.name,
@@ -138,13 +143,13 @@ module.exports = {
         author: event.senderID
       });
 
-      api.setMessageReaction("âœ…", event.messageID, () => {}, true);
+      api.setMessageReaction("✔️", event.messageID, () => {}, true);
 
     } catch (error) {
       console.error(`Error fetching follow-up response: ${error.message}, Status Code: ${error.response ? error.response.status : 'N/A'}`);
-      message.reply(`âš ï¸ An error occurred while processing your reply. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
+      message.reply(`✏️ An error occurred while processing your reply. Error: ${error.message}${error.response ? `, Status Code: ${error.response.status}` : ''}. Please try again later.`);
 
-      api.setMessageReaction("âŒ", event.messageID, () => {}, true);
+      api.setMessageReaction("❌", event.messageID, () => {}, true);
     }
   }
 };
