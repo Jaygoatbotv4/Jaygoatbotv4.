@@ -5,7 +5,7 @@ const Prefixes = [
   'ask',
   'gpt',
   'openai',
-  '@ai', // put here your AI names 
+  '@ai', // Mica Ai
 ];
 
 module.exports = {
@@ -59,7 +59,7 @@ module.exports = {
       const processTimeMs = endTime - startTime;
       const processTimeSec = (processTimeMs / 1000).toFixed(2);
 
-      const formattedResponse = `𝗔𝗜 𝗥𝗲𝘀𝗽𝗼𝗻𝘀𝗲🎀\n━━━━━━━━━━━━━━━━\n➤ 𝓠𝓾𝓮𝓼𝓽𝓲𝓸𝓷: ${question}\n━━━━━━━━━━━━━━━━\n🗣 𝓐𝓷𝓼𝔀𝓮: ${answer}\n━━━━━━━━━━━━━━━━\n⏰ Respond Time: ${processTimeSec} seconds`;
+      const formattedResponse = `𝗠𝗶𝗰𝗮 𝗔𝗶🎀\n━━━━━━━━━━━━━━━━\n➣𝓓𝓮𝓿𝓮𝓵𝓸𝓹𝓮𝓭 𝓫𝔂 𝓳𝓪𝔂🌊\n\n${answer}\n━━━━━━━━━━━━━━━━\n⏰ Respond Time: ${processTimeSec} seconds`;
 
       const replyMessage = await message.reply(formattedResponse);
 
@@ -133,7 +133,7 @@ module.exports = {
       const processTimeMs = endTime - startTime;
       const processTimeSec = (processTimeMs / 1000).toFixed(2);
 
-      const formattedFollowUp = `𝗔𝗜 𝗙𝗼𝗹𝗹𝗼𝘄-𝗨𝗽 𝗥𝗲𝘀𝗽𝗼𝗻𝘀𝗲🎀\n━━━━━━━━━━━━━━━━\n➤ 𝓠𝓾𝓮𝓼𝓽𝓲𝓸𝓷: ${userReply}\n━━━━━━━━━━━━━━━━\n🗣 𝓐𝓷𝓼𝔀𝓮: ${followUpResponse}\n━━━━━━━━━━━━━━━━\n⏰ Respond Time: ${processTimeSec} seconds`;
+      const formattedFollowUp = `𝗠𝗶𝗰𝗮 𝗔𝗶🎀\n━━━━━━━━━━━━━━━━\n➣𝓓𝓮𝓿𝓮𝓵𝓸𝓹𝓮𝓭 𝓫𝔂 𝓳𝓪𝔂🌊\n\n${followUpResponse}\n━━━━━━━━━━━━━━━━\n⏰ Respond Time: ${processTimeSec} seconds`;
 
       const followUpMessage = await message.reply(formattedFollowUp);
 
