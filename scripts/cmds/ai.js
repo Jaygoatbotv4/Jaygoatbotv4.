@@ -41,7 +41,7 @@ module.exports = {
     }
 
     const uid = event.senderID;
-    api.setMessageReaction("👍", event.messageID, () => {}, true);
+    api.setMessageReaction("🕜", event.messageID, () => {}, true);
 
     const startTime = Date.now();
 
@@ -69,7 +69,7 @@ module.exports = {
         author: event.senderID
       });
 
-      api.setMessageReaction("✔️", event.messageID, () => {}, true);
+      api.setMessageReaction("✅", event.messageID, () => {}, true);
 
     } catch (error) {
       console.error(`Error fetching response: ${error.message}, Status Code: ${error.response ? error.response.status : 'N/A'}`);
