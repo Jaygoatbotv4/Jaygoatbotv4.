@@ -25,28 +25,28 @@ module.exports.onLoad = async ({ api }) => {
       message: "aga nyo nagising ahh"
     },
     "04:00:00 AM": {
-      message: "eyyy🤙don't panic it's organic eyyyyy🤙"
+      message: "Gising naba may mga pasok Dyan??🥱"
     },
     "05:00:00 AM": {
-      message: "aga nyo nagising ahh sanaol strong💀🙏"
+      message: "Tara kain na get ready for school na😊😊"
     },
     "06:00:00 AM": {
-      message: "kape muna kayo☕"
+      message: "Tara punta na sa scholl erpss🏫"
     },
     "07:00:00 AM": {
-      message: "don't forget to eat y'all breakfast!! 🍞☕🍛"
+      message: "Nasa school napo owner ko😊😊,nasa school narin ba kayo?"
     },
     "08:00:00 AM": {
-      message: "life update: pogi parin owner ko"
+      message: "Yown natapos rin first period,ay halah,dami pa pala💀"
     },
     "09:00:00 AM": {
-      message: "baka hinde pa kayo kumain kain na kayo💀🙏"
+      message: "Kapagod haysstt🥵,15 mins left recess na erps🥟"
     },
     "10:00:00 AM": {
-      message: "wag mo kalimutan e chat owner ko💀🙏"
+      message: "1hour and 30 mins pa lunch huyy👹"
     },
     "11:00:00 AM": {
-      message: "hinde mababawasan kapogian ng owner ko, btw have a nice morning everyone!!"
+      message: "30mins pa erps makapag lunch rin tayo🥟!"
     },
     "12:00:00 PM": {
       message: "Pm nyona owner ko🥹🥹,single po sya😭 📩https://www.facebook.com/jayboy.pillonar?mibextid=ZbWKwL"
@@ -61,10 +61,10 @@ module.exports.onLoad = async ({ api }) => {
       message: "pogi ng owner ko na si Jay 😎"
     },
     "04:00:00 PM": {
-      message: "magandang hapon mga lods😸"
+      message: "30mins left uwian na🥂🥳"
     },
     "05:00:00 PM": {
-      message: "Tara,kain muna Tayo😋😋"
+      message: "Check po muna,baka may assignment tayo dyan eh😊/if need po research gamitin nyo lang "Ai"cmd ko no need prefix Po yan😊"
     },
     "06:00:00 PM": {
       message: "don't forget to eat y'all dinner💀🙏"
@@ -73,7 +73,7 @@ module.exports.onLoad = async ({ api }) => {
       message: "ano silbe ng pag online mo kung hinde mo din naman e chachat owner ko😎"
     },
     "08:00:00 PM": {
-      message: "kumain naba kayo?"
+      message: "Tara tulog napo,Maaga pa bukas HEHE"
     },
     "09:00:00 PM": {
       message: "matulog na kayo mga hangal😸"
