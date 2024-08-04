@@ -1,32 +1,12 @@
-const runningWars = {};
-
 module.exports = {
   config: {
     name: "war",
     author: "Jay",
-    role: 2, // Admin-only command
+    role: 2,
     category: "test"
   },
-  onStart: async function ({ message: { reply, send, text }, event: { mentions, threadID }, usersData: { getName } }) {
-    // If the command is "/war stop", stop the war in the current thread
-    if (text.trim() === "/war stop") {
-      if (runningWars[threadID]) {
-        clearInterval(runningWars[threadID]);
-        delete runningWars[threadID];
-        return reply("War command stopped.");
-      } else {
-        return reply("No active war command.");
-      }
-    }
-
-    // Get the mentioned user's ID
-    const id = Object.keys(mentions)[0];
-    if (!id) {
-      return reply("Please mention a user to start the war.");
-    }
-
-    // Insult messages
-    const fuck = [
+  onStart: async function ({ message: { reply, send }, event: { mentions }, usersData: { getName } }) {
+    const messages = [
       "gumagamit ka nalang bot ingay mo pa tanginaka ket nga siguro reboot ng cp mo di mo alam dami mong satsat ampota",
       "ginagalit mo si Jay tang ina kang tanga ka ahh feeling ranters e katiting kalang kay Jay",
       "paduduguin ko ulo mo ewan kona lang kung dika mag panic",
@@ -52,6 +32,7 @@ module.exports = {
       "fuck you nigga, mabaho puke mo",
       "bye iyak na iyak kana jan e HAHAHA iyakin kapa naman tanga ka",
       "till next time gago bye na pasok kana sa aquarium mo bawal ka sa lupa mukha kang wtf",
+      // Additional messages
       "Putang Ina mo wth, ur so immature asf, pinagaral Kaba ng magulang mo huh, Baka gusto mo pag pa seminar Kay Tyga, gusto mo pakantot kita Kay Tyga, kupal, bobo ABNO PUTANG INA MOO🖕🏾🤷🏾‍♂️🤮🤣🤣🤣, mahina Kapa bobo Duwag, hangal buboo HAHAHAHHAHAHAHAH🖕🏾🖕🏾🖕🏾",
       "Hangal Kaba huh? Sabi ka lang baka bobo ka🤣🤣,pinag sasabi mo huh?ge atay ka,bisakol kanga bulok pa🤣🤣💀☕",
       "Pinagsasabi mo huh???wtf,ur so immature,dumbasf kiddo,gusto mo pakantot kita Kay Fernando💀💀🤣, bulok mga pinag sasabi mo lolll spammer pa amp HHAHAHAHAHAHAHAHA💀🗿☕☕☕☕",
@@ -60,7 +41,7 @@ module.exports = {
       "pukenanginamo, bobo, tanga, walang pinag-aralan, mang mang, sinto². walang ma-oop. gago, hayop, shit, fuck, shibal, tonta/o.hayop ka. madapa ka sana, pwe. baho, basura, kanal, mapanghe🤣🤣🤣🖕🏾🖕🏾",
       "WTF HAHAHAHAHAHAH🤣🤣🤣",
       "HOY PUTANGINA MO YUNG MGA BARKADA MO NANGBABATO SA BAHAY NAMIN HA WAG KAYONG MANG BABATO SA BAHAY NAMIN HA PUTANGINA MO😡😡😡🤣🤣🤣🤣",
-      "āsintādø sinasamba🙏 āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏",
+      "āsintādø sinasamba🙏".repeat(50), // Repeats the message 50 times
       "Bobo🤣🤣",
       "Tanga-🤣🖕🏾",
       "Inutil🖕🏾",
@@ -70,7 +51,7 @@ module.exports = {
       "OBOB KABA HAHAHAHAHHA🤣🤣🖕🏾",
       "INA MOO MAMATAY NA KAYO NANG PAMILYA MO HAHAHAHHA🤣🤣",
       "Sabog Kaba HAHAHAHAH🤣🤣",
-      "Tara sama ka sakin may pupuntahan ko,Sama kana sakin pa tingin kita sa konduktor,BALIW NA EH AHHAHAHAHAHAH🤣🤣",
+      "Tara sama ka sakin may pupuntahan ko,Sama kana sakin pa tingin kita sa konduktor,BALIW NA EH AHHAHAHAHAHA🤣🤣",
       "Gusto mo PATAYIN Kona kayo nang pamilya mo🤣🤣🤣",
       "OK LANG YAN,GANYAN TALAGA KAPAG,NASAPAK KA SA UTAK EH HAHAHA☕🗿",
       "GASTADORRR🤣🤣",
@@ -85,30 +66,27 @@ module.exports = {
       "BISAKOL KANG HAMBOG KA ANO,NAIYAK KANABA HAHAHHA🤣🤣",
       "IYAKIN AMP HAHAHAHHAHA🤣🤣",
       "ANO PALAG HAHAHAHAHHA,PALIBHASA TANGA KA🤣🤣🤡",
-      "āsintādø sinasamba🙏 āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏āsintādø sinasamba🙏",
-      "TANGA TANGA TANGA🤡🤡🤡-TANGA TANGA TANGA🤡🤡🤡-TANGA TANGA TANGA🤡🤡🤡-TANGA TANGA TANGA🤡🤡🤡",
-      "BOBO", "TANGA", "INUTIL", "BANO BA HAHAHAH🤣🤣🤣", "BAYOT", "BADING", "AKLA HAHAHAHAHA🤣🤣"
+      "āsintādø sinasamba🙏".repeat(50) // Repeats the message 50 times
     ];
 
+    const id = Object.keys(mentions)[0];
+    if (!id) {
+      return reply("mention mo muna si tanga");
+    }
     const tag = await getName(id);
+    
+    // Recursive function to continuously send messages
+    async function sendMessages(index = 0) {
+      if (index >= messages.length) index = 0; // Reset index to loop messages
 
-    // If a war is already running in this thread, notify the user
-    if (runningWars[threadID]) {
-      return reply("A war is already active in this chat.");
+      send({ 
+        body: tag + " " + messages[index],
+        mentions: [{ id, tag }]
+      });
+
+      setTimeout(() => sendMessages(index + 1), 1500); // Set delay of 1.5 seconds
     }
 
-    // Start sending messages repeatedly
-    runningWars[threadID] = setInterval(() => {
-      fuck.forEach((insult, i) => {
-        setTimeout(() => {
-          send({
-            body: `${insult} @${tag}`,
-            mentions: [{ tag, id }]
-          });
-        }, i * 500); // Adjust the delay as needed (500ms between messages)
-      });
-    }, fuck.length * 500 + 500); // Repeats after all insults have been sent
-
-    reply(`War has started against ${tag}. Use "/war stop" to end it.`);
+    sendMessages(); // Start sending messages
   }
 };
