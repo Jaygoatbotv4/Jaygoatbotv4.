@@ -21,6 +21,7 @@ module.exports = {
 		const videoLinks = [
 			"https://i.imgur.com/IGXINCB.mp4",
 			"https://i.imgur.com/JnmXyO3.mp4",
+			"https://i.imgur.com/OFoF4U4.mp4",
 			"https://i.imgur.com/Qudb0Vl.mp4",
 			"https://i.imgur.com/N3wIadu.mp4",
 			"https://i.imgur.com/X7lugs3.mp4",
