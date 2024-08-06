@@ -52,7 +52,7 @@ module.exports.onLoad = async ({ api }) => {
       message: " add nyona owner ko,baka malay mo andun lang pala truelove mo,huyy😆🥰"
     },
     "01:00:00 PM": {
-      message: " don't forget to eat y'all lunch break😸"
+      message: " start nanaman first period at noon😫"
     },
     "02:00:00 PM": {
       message: " good afternoon!!, my owner is so handsome asf😎"
@@ -61,7 +61,7 @@ module.exports.onLoad = async ({ api }) => {
       message: "┃ pogi ng owner ko na si Jay 😎"
     },
     "04:00:00 PM": {
-      message: " magandang hapon mga lods😸"
+      message: " 30 mins left uwian napo tayo HEHE🤩🤩"
     },
     "05:00:00 PM": {
       message: " check po muna baka may assignment"
@@ -76,7 +76,7 @@ module.exports.onLoad = async ({ api }) => {
       message: " kumain naba kayo?"
     },
     "09:00:00 PM": {
-      message: " matulog na kayo mga hangal😸"
+      message: " matulog napo kayo,maaga papo tayo bukas mwuahh👄😘"
     },
     "10:00:00 PM": {
       message: " gabi na nag puyat parin kayo💀🙏"
