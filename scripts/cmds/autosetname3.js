@@ -28,8 +28,8 @@ module.exports = {
         category: "box chat",
         guide: {
             en: 'The bot will automatically change the nickname of a new member based on their gender.\n'
-                + 'Male: 》 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ {userName}.♦\n'
-                + 'Female: 》 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ {userName}.🎀\n'
+                + 'Male: 》 𝗔𝗔𝗚 || 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ {userName}.♦\n'
+                + 'Female: 》 𝗔𝗔𝗚 || 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ {userName}.🎀\n'
                 + 'Usage: /autosetname3 on to enable, /autosetname3 off to disable.'
         }
     },
@@ -63,8 +63,8 @@ module.exports = {
 
                 // Use the first name in the nickname format
                 const nameFormat = gender === 1 ? 
-                    `》 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ ${toBoldFont(firstName)}.🎀` : 
-                    `》 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ ${toBoldFont(firstName)}.♦`;
+                    `》 𝗔𝗔𝗚 || 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ ${toBoldFont(firstName)}.🎀` : 
+                    `》 𝗔𝗔𝗚 || 𝗠𝗘𝗠𝗕𝗘𝗥👥 《 ❃ ➠ ${toBoldFont(firstName)}.♦`;
 
                 // Change the user's nickname in the chat
                 await api.changeNickname(nameFormat, event.threadID, uid);
