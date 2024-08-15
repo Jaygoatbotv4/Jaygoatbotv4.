@@ -4,20 +4,14 @@ let conversationHistory = {}; // Store conversation history per thread
 
 module.exports = {
   config: {
-    name: 'gpt4',
+    name: 'autoresponse',
     version: '1.0.0',
-    author: 'Jay Pillonar',
     role: 0,
-    category: 'GPT4',
-    longDescription: {
-      en: 'This bot responds to every message with a GPT-4 generated reply, maintaining a continuous conversation.'
-    },
-    guide: {
-      en: `
-      Command: (No prefix needed)
-      - This command responds to every message with a GPT-4 generated reply, maintaining a continuous conversation.
-      `
-    }
+    hasPrefix: false, // No prefix needed
+    description: "An AI command powered by OpenAI",
+    usages: "",
+    credits: 'Developer',
+    cooldown: 5,
   },
 
   onStart: async () => {},
@@ -42,8 +36,8 @@ module.exports = {
 
     try {
       // Send the message to the GPT-4 API for a response
-      const response = await axios.get('https://ai-chat-gpt-4-lite.onrender.com/api/hercai', {
-        params: { question: gpt4_prompt }
+      const response = await axios.get('https://openai-rest-api.vercel.app/hercai', {
+        params: { ask: gpt4_prompt, model: 'v3' }
       });
 
       if (response.status !== 200 || !response.data || !response.data.reply) {
