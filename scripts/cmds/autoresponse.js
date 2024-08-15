@@ -4,7 +4,7 @@ let conversationHistory = {}; // Store conversation history per thread
 
 module.exports = {
   config: {
-    name: 'autoresponse',
+    name: 'hercai',
     version: '1.0.0',
     role: 0,
     hasPrefix: false, // No prefix needed
