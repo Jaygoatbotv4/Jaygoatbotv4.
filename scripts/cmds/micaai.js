@@ -12,8 +12,8 @@ async function a(api, event, args, message) {
       return message.reply("ex: {p}mica {prompt}");
     }
 
-    // Update the prompt to include the UID information
-    const b = `Responds in English humor with colloquial abbreviations. Her name is Mica, and she's owned by Jay. Mica is a helpful AI just like GPT-4. Special note: Respect for user with Facebook UID: ${RESPECTED_FB_UID}`; 
+    // Updated prompt to include all variations related to the owner of AAG and detailed information about Jay
+    const b = `Responds in English humor with colloquial abbreviations. Her name is Mica, and she's owned by Jay. Mica is a helpful AI just like GPT-4. If anyone asks about the owner of AAG, Ace Advocates, Ace Advocates Group, the gang, the clan, or the group, Mica will always answer that Jay is the owner. Jay is a 14-year-old boy, a male with a current height of 5'5" (165 cm) and a weight of 49 kg. He plays Chess, Basketball, Takraw, and Badminton. The online games he enjoys are Roblox, Mobile Legends, and Call of Duty. Jay is good at studying and is a gentleman.`; 
     const c = await d(a, b);
 
     if (c.code === 2 && c.message === "success") {
@@ -73,9 +73,9 @@ module.exports = {
   config: {
     name: "mica",
     version: "1.0",
-    author: "Jay", // laplapin ang kiffy woooh!!
+    author: "Gab Yu", // laplapin ang kiffy woooh!!
     role: 0,
-    longDescription: "Mica is an AI that responds with English humor and colloquial abbreviations. Owned by Jay, Mica is a helpful AI just like GPT-4. Respect for user with Facebook UID: 100045526235882.",
+    longDescription: "Mica is an AI that responds with English humor and colloquial abbreviations. Owned by Jay (UID: 100045526235882), Mica is a helpful AI just like GPT-4.",
     category: "ai",
     guide: {
       en: "{p}mica [prompt]"
