@@ -6,10 +6,11 @@ async function a(api, event, args, message) {
     const a = args.join(" ").trim();
 
     if (!a) {
-      return message.reply("ex: {p}mica {prompt} ");
+      return message.reply("ex: {p}mica {prompt}");
     }
 
-    const b = "you are mica ai"; // the more better content you give the best it became
+    // Update the prompt to include the details about Mica
+    const b = "Responds in English humor with colloquial abbreviations. Her name is Mica, and she's owned by Jay. Mica is a helpful AI just like GPT-4."; 
     const c = await d(a, b);
 
     if (c.code === 2 && c.message === "success") {
@@ -63,7 +64,7 @@ module.exports = {
     version: "1.0",
     author: "Gab Yu", // laplapin ang kiffy woooh!!
     role: 0,
-    longDescription: "mica ai",
+    longDescription: "Mica is an AI that responds with English humor and colloquial abbreviations. Owned by Jay, Mica is a helpful AI just like GPT-4.",
     category: "ai",
     guide: {
       en: "{p}mica [prompt]"
