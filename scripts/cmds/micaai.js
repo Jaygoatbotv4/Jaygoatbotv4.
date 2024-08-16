@@ -30,7 +30,7 @@ async function a(api, event, args, message) {
         
         let respectMessage = '';
         if (event.senderID === RESPECTED_FB_UID) {
-          respectMessage = "Mica always respects you, as you are highly valued.";
+          respectMessage = "〢Mica always respects you, as you are highly valued.";
         }
 
         const responseMessage = `
@@ -39,6 +39,7 @@ async function a(api, event, args, message) {
 ${c.answer}
 ━━━━━━━━━━━━━━━━
 ${respectMessage}
+
 🗣 Asked by: ${senderName}
 ⏰ 𝑅𝑒𝑠𝑝𝑜𝑛𝑑 𝑇𝑖𝑚𝑒: ${responseTime}
         `;
