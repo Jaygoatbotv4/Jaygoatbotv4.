@@ -13,9 +13,9 @@ module.exports = {
         usages: "[text]",
         cooldowns: 5,
         dependencies: {
-            "canvas": "",
-            "axios": "",
-            "fs-extra": ""
+            "canvas": "^2.7.0",
+            "axios": "^0.21.1",
+            "fs-extra": "^10.0.0"
         }
     },
 
@@ -92,3 +92,4 @@ module.exports = {
             api.sendMessage("An error occurred while generating the image.", threadID, messageID);
         }
     }
+};
