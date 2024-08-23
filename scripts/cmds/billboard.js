@@ -56,7 +56,7 @@ module.exports = {
         }
 
         const pathImg = __dirname + '/cache/fact.jpg';
-        const imageURL = 'https://i.imgur.com/aOZUbNm.jpg';
+        const imageURL = 'https://i.imgur.com/HhhOcap.jpeg';
 
         try {
             // Download and save the image
