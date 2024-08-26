@@ -92,7 +92,7 @@ module.exports = {
       return;
     }
 
-    api.setMessageReaction("👍", event.messageID, () => {}, true);
+    api.setMessageReaction("🎀", event.messageID, () => {}, true);
 
     if (userReply.toLowerCase() === 'reset') {
       try {
